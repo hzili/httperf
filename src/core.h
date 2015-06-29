@@ -36,8 +36,7 @@
 #include <netinet/in.h>
 
 extern void core_init (void);
-extern void core_add_addresses (const char *spec);
-extern struct sockaddr_in *core_addr_intern (const char *hostname,
+extern struct sockaddr_in *core_intern_addr (const char *hostname,
 					     size_t hostname_len, int port);
 extern int core_connect (Conn *conn);
 extern int core_send (Conn *conn, Call *call);

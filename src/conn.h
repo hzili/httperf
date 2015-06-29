@@ -66,8 +66,6 @@ typedef enum Conn_State
   }
 Conn_State;
 
-struct local_addr;
-
 typedef struct Conn
   {
     Object obj;
@@ -94,7 +92,6 @@ typedef struct Conn
     int port;			/* server's port (or -1 for default) */
     int	sd;			/* socket descriptor */
     int myport;			/* local port number or -1 */
-    struct local_addr *myaddr;
     /* Since replies are read off the socket sequentially, much of the
        reply-processing related state can be kept here instead of in
        the reply structure: */
@@ -102,8 +99,6 @@ typedef struct Conn
     size_t content_length;	/* content length (or INF if unknown) */
     u_int has_body : 1;		/* does reply have a body? */
     u_int is_chunked : 1;	/* is the reply chunked? */
-    u_int reading : 1;
-    u_int writing : 1;
     char line_buf[MAX_HDR_LINE_LEN];	/* default line buffer */
 
 #ifdef HAVE_SSL
@@ -114,9 +109,6 @@ Conn;
 
 extern int max_num_conn;
 extern Conn *conn;
-
-/* Store the servers to connect to in memory. */
-extern void conn_add_servers (void);
 
 /* Initialize the new connection object C.  */
 extern void conn_init (Conn *c);

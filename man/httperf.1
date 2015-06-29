@@ -60,6 +60,7 @@ httperf \- HTTP performance measurement tool
 .RB [ \-v | \-\-verbose ]
 .RB [ \-V | \-\-version ]
 .RB [ "\-\-wlog y" | n, \fIF\fR]
+.RB [ "\-\-wrichlog y" | n, \fIF\fR]
 .RB [ \-\-wsess
 .I R N , N , X ]
 .RB [ \-\-wsesslog
@@ -599,6 +600,11 @@ set to
 .RB `` n '',
 the test will stop no later than when reaching the end of the URI
 list.
+.TP 
+.BI \-\-wrichlog= B , F
+The richlog file contains one URL per line, with potentially a number of 
+space-separated arguments following it, including: method / content / 
+file / content-type / cookie / header
 .TP 
 .BI \-\-wsess= N1 , N2 , X
 Requests the generation and measurement of sessions instead of

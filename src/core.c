@@ -80,16 +80,15 @@ Conn          **sd_to_conn;
 static u_long   port_free_map[((MAX_IP_PORT - MIN_IP_PORT + BITSPERLONG)
 			       / BITSPERLONG)];
 static char     http10req[] =
-    " HTTP/1.0\r\nUser-Agent: httperf/" VERSION
-    "\r\nConnection: keep-alive\r\nHost: ";
+    " HTTP/1.0\r\nConnection: keep-alive\r\nHost: ";
 static char     http11req[] =
-    " HTTP/1.1\r\nUser-Agent: httperf/" VERSION "\r\nHost: ";
+    " HTTP/1.1\r\nHost: ";
 
 static char     http10req_nohost[] =
-    " HTTP/1.0\r\nUser-Agent: httperf/" VERSION
-    "\r\nConnection: keep-alive";
+    " HTTP/1.0\r\n Connection: keep-alive";
 static char     http11req_nohost[] =
-    " HTTP/1.1\r\nUser-Agent: httperf/" VERSION;
+    " HTTP/1.1";
+static char ua_hdr[] = "User-Agent: httperf/" VERSION "\r\n";
 
 #ifndef SOL_TCP
 # define SOL_TCP 6		/* probably ought to do getprotlbyname () */
@@ -1017,6 +1016,11 @@ core_send(Conn * conn, Call * call)
 			prog_name, call->req.version);
 		exit(1);
 	}
+
+	if (! param.no_ua_hdr) {
+		call_append_request_header(call, ua_hdr, strlen(ua_hdr));
+	}
+	
 	call->req.iov_index = 0;
 	call->req.iov_saved = call->req.iov[0];
 

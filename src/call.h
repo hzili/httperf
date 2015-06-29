@@ -36,7 +36,7 @@
 #include <sys/uio.h>
 
 /* Max. # of additional request header lines we allow: */
-#define MAX_EXTRA_HEADERS	4
+#define MAX_EXTRA_HEADERS	6
 
 typedef enum IOV_Element
   {

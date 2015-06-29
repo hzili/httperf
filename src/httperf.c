@@ -87,6 +87,10 @@
 #  include <openssl/rand.h>
 #endif
 
+#ifdef __FreeBSD__
+#  include <ieeefp.h>
+#endif
+
 #define RATE_INTERVAL	5.0
 
 const char     *prog_name;
@@ -122,6 +126,7 @@ static struct option longopts[] = {
 	{"max-piped-calls", required_argument, &param.max_piped, 0},
 	{"method", required_argument, (int *) &param.method, 0},
 	{"no-host-hdr", no_argument, &param.no_host_hdr, 1},
+	{"no-ua-hdr", no_argument, &param.no_ua_hdr, 1},
 	{"num-calls", required_argument, (int *) &param.num_calls, 0},
 	{"num-conns", required_argument, (int *) &param.num_conns, 0},
 	{"period", required_argument, (int *) &param.rate.mean_iat, 0},
@@ -147,6 +152,7 @@ static struct option longopts[] = {
 	{"verbose", no_argument, 0, 'v'},
 	{"version", no_argument, 0, 'V'},
 	{"wlog", required_argument, (int *) &param.wlog, 0},
+	{"wrichlog", required_argument, (int *) &param.wrichlog, 0},
 	{"wsess", required_argument, (int *) &param.wsess, 0},
 	{"wsesslog", required_argument, (int *) &param.wsesslog, 0},
 	{"wsesspage", required_argument, (int *) &param.wsesspage, 0},
@@ -173,7 +179,7 @@ usage(void)
 #endif
 	       "\t[--think-timeout X] [--timeout X] [--verbose] [--version]\n"
 	       "\t[--wlog y|n,file] [--wsess N,N,X] [--wsesslog N,X,file]\n"
-	       "\t[--wset N,X]\n"
+	       "\t[--wset N,X] [--wrichlog y|n,file] [--no-ua-hdr]\n"
 	       "\t[--use-timer-cache]\n", prog_name);
 }
 
@@ -214,7 +220,7 @@ int
 main(int argc, char **argv)
 {
 	extern Load_Generator uri_fixed, uri_wlog, uri_wset, conn_rate,
-	    call_seq;
+	    uri_wrichlog, call_seq;
 	extern Load_Generator wsess, wsesslog, wsesspage, sess_cookie, misc;
 	extern Stat_Collector stats_basic, session_stat;
 	extern Stat_Collector stats_print_reply;
@@ -652,7 +658,13 @@ main(int argc, char **argv)
 				param.wlog.do_loop = (*optarg == 'y')
 				    || (*optarg == 'Y');
 				param.wlog.file = optarg + 2;
-			} else if (flag == &param.wsess) {
+			} else if (flag == &param.wrichlog) {
+				gen[1] = &uri_wrichlog;
+
+				param.wrichlog.do_loop = (*optarg == 'y') 
+				    || (*optarg == 'Y');
+				param.wrichlog.file = optarg + 2;
+ 			} else if (flag == &param.wsess) {
 				num_gen = 2;	/* XXX fix me---somehow */
 				gen[0] = &wsess;
 

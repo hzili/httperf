@@ -113,6 +113,7 @@ typedef struct Cmdline_Params
     int print_reply;	/* bit 0: print repl headers, bit 1: print repl body */
     int session_cookies; /* handle set-cookies? (at the session level) */
     int no_host_hdr;	/* don't send Host: header in request */
+    int no_ua_hdr;      /* don't send User-Agent: header in request */
 #ifdef HAVE_SSL
     int use_ssl;	/* connect via SSL */
     int ssl_reuse;	/* reuse SSL Session ID */
@@ -160,8 +161,14 @@ typedef struct Cmdline_Params
 	double target_miss_rate;
       }
     wset;
+    struct
+      {
+        char *file;     /* name of the file where entries are */
+        char do_loop;   /* boolean indicating if we want to loop on entries */
+      }
+    wrichlog;
   }
-Cmdline_Params;
+  Cmdline_Params;
 
 extern const char *prog_name;
 extern int verbose;

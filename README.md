@@ -425,3 +425,36 @@ typically timeout before TCP even gets a chance to retransmit (the
 initial retransmission timeout is on the order of 3 seconds).  This is
 usually OK, except that one should keep in mind that it has the effect
 of truncating the connection life time distribution.
+
+## Parameter wrichlog
+
+To use the richlog load generator, you need to explicitly invoke it with --wrichlog with two arguments;
+*	Whether or not the log should be looped through (y/n)
+*	The filesystem path to the richlog file
+
+For example,
+  httperf --wrichlog=y,urls.richlog --num-conns=100000 --rate=5 --server example.com
+
+will loop through the urls.richlog file until 100,000 connections are made, at a rate of five connections a second.
+
+wrichlog log files
+
+The richlog file contains one URL per line, with potentially a number of space-separated arguments following it, including:
+*	method - The request method to use*.
+*	contents - The contents of the request body to send, as a quoted string.
+*	file - The filesystem path to the contents of the request body to send*.
+*	content-type - The media type of the request body (e.g., if the request is a PUT or POST)*.
+*	cookie - A cookie string to send in request headers.
+*	header - An arbitrary request header (or headers) to send.
+
+Arguments marked with * must not be quoted or contain whitespace; all other arguments may contain whitespace, as long as they're quoted.
+
+Quotes can be included in quoted content by escaping them with a backslash ("\"). No arguments permit newlines or other control characters.
+
+For example;
+*	/foo
+*	/bar cookie=abc=123 method=POST content-type=application/xml contents="<foo>bar</foo>"
+*	/baz cookie=abc=456 method=PUT content-type=application/json file=/path/to/data
+*	/bam header="User-Agent: mozilla/1.0"
+
+Note that requests will be sent to the server on the command line (--server) regardless of the URL given in the logfile.

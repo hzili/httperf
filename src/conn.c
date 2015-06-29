@@ -44,6 +44,7 @@
 #include <timer.h>
 #include <httperf.h>
 #include <conn.h>
+#include <errno.h>
 
 void
 conn_init (Conn *conn)

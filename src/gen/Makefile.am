@@ -6,4 +6,4 @@ noinst_LIBRARIES = libgen.a
 libgen_a_SOURCES = call_seq.c conn_rate.c misc.c rate.c rate.h session.c \
 	session.h uri_fixed.c uri_wlog.c uri_wset.c \
 	wsess.c wsesslog.c wsesspage.c \
-	sess_cookie.c
+	sess_cookie.c uri_wrichlog.c

@@ -1,1 +1,3 @@
+before_install:
+  - autoreconf -i
 language: c
